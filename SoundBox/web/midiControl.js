@@ -13,6 +13,7 @@ function initialize(){
         listInputsAndOutputs(midi);
     }
 
+
     function onMIDIFailure(msg) {
         console.log( "Failed to get MIDI access - " + msg );
     }
@@ -44,73 +45,36 @@ function initialize(){
         midiInput.onmidimessage = MIDIMessageEventHandler;
         return midiInput;
     }
+
     function MIDIMessageEventHandler(event) {
-        // Mask off the lower nibble (MIDI channel, which we don't care about)
-        switch (event.data[0] & 0xf0) {
-            case 0x90:
-                if (event.data[2]==0) { 
-                    noteOff(event.data[1]);
-                }
-                else{
-                    noteOn(event.data[1], event.data[2]);
-                }
-                break;
-            case 0x80:
-                noteOff(event.data[2]);
-                break;
-            case 0xB0:
-                controlChange(event.data[1], event.data[2]);
-                break;
-            case 0xC0:
-                programChange(event.data[1]);
-                break;
-            case 0xE0:
-                pitchbend(event.data[1], event.data[2]);
-                break;
-        }
+        // Check for event case (0xf0 = sysex)
+        //console.log(event.data[0]);
+        //calculate data value
         var value = 0;
         for(var i = 1; i < 7; i++){
             value += event.data[i];
         }
+        //switch case for coordinates
         switch(stateInfo){
             case 0:
                 console.log(value + " X");
-                valueX = value;
+                valueX = value-320;
+                //updatePositions(0);
                 break;
             case 1:
                 console.log(value + " Y");
-                valueY = value;
+                valueY = value-240;
+                //updatePositions(1);
                 break;
             case 2:
                 console.log(value + " Z");
-                valueZ = value;
+                valueZ = value-320;
+                //updatePositions(2);
         }
-        //console.log(value);
-        //console.log(stateInfo);
         stateInfo++;
         if(stateInfo == 3){
             stateInfo = 0;
+            updatePositions();
         }
-
-    }
-    function sysex(infoInt){
-        console.log(`value: ${infoInt}`);
-    }
-    function noteOn(noteNumber, velocity){
-        console.log(`note on: note=${noteNumber}, velocity = ${velocity}`);
-    }
-    function noteOff(noteNumber){
-        console.log(`note off: note=${noteNumber}`);
-    }
-    function controlChange(controller, value){
-        console.log(`control change: controller = ${controller}, value = ${value}`);
-    }
-    function programChange(program){
-        console.log(`program change: program=${program}`);
-    }
-    function pitchbend(value1, value2){
-        console.log(value1 * 128 + " " + value2);
-        const pitchbendValue = (value1 * 128 + value2) - 8192;
-        console.log(`pitch bend: value = ${pitchbendValue}`);
     }
 }
