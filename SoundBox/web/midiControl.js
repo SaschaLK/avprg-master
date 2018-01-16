@@ -58,17 +58,17 @@ function initialize(){
         switch(stateInfo){
             case 0:
                 console.log(value + " X");
-                valueX = value-320;
+                valueX = (value-320)/100;
                 //updatePositions(0);
                 break;
             case 1:
                 console.log(value + " Y");
-                valueY = value-240;
+                valueY = (value-240)/100;
                 //updatePositions(1);
                 break;
             case 2:
                 console.log(value + " Z");
-                valueZ = value-320;
+                valueZ = (value-320)/100;
                 //updatePositions(2);
         }
         stateInfo++;

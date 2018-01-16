@@ -9,11 +9,21 @@ let dimensions = {
     small: {width: 640, height: 480, depth: 640},
 };
 
-let onLoad = function() {
+function updatePositions() {
+    soundSource.setPosition(valueX, valueY, valueZ);
+}
+
+document.getElementById("playButton").onclick = function(){playMusic()};
+
+function playMusic(){
     // Initialize Resonance Audio and create source.
     let audioContext = new AudioContext();
+    //var sound2 = new Audio("music/" + )
 
-    var sound = new Audio("CubeSound.wav");
+    var e = document.getElementById("songs");
+    var sound = new Audio("music/" + e.options[e.selectedIndex].value);
+    console.log(e);
+    console.log(e.options);
     sound.loop = true;
     sound.play();
     var source = audioContext.createMediaElementSource(sound);
@@ -25,10 +35,7 @@ let onLoad = function() {
 
     resonanceAudioScene.output.connect(audioContext.destination);
     resonanceAudioScene.setRoomProperties(dimensions[dimensionSelection]);
-}
-
-function updatePositions() {
-    soundSource.setPosition(valueX, valueY, valueZ);
+    
 }
 
 window.addEventListener("load", onLoad);
