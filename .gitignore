@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Folders
+build-SoundBox-Desktop_Qt_5_6_3_MSVC2015_64bit-Debug/
